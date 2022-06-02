@@ -2,7 +2,7 @@ package org.joksin.demomongo.dao;
 
 import org.joksin.demomongo.dao.util.UserDocumentMapper;
 import org.joksin.demomongo.model.User;
-import org.joksin.demomongo.util.DocumentMongoTemplate;
+import org.joksin.demomongo.util.EnhancedMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
@@ -13,10 +13,10 @@ import java.util.List;
 @Component
 public class UserDao {
 
-    private final DocumentMongoTemplate bsonMongoTemplate;
+    private final EnhancedMongoTemplate bsonMongoTemplate;
     private final UserDocumentMapper userBsonObjectMapper;
 
-    public UserDao(DocumentMongoTemplate bsonMongoTemplate, UserDocumentMapper userDocumentMapper) {
+    public UserDao(EnhancedMongoTemplate bsonMongoTemplate, UserDocumentMapper userDocumentMapper) {
         this.bsonMongoTemplate = bsonMongoTemplate;
         this.userBsonObjectMapper = userDocumentMapper;
     }

@@ -3,7 +3,7 @@ package org.joksin.demomongo.dao;
 import org.bson.Document;
 import org.joksin.demomongo.dao.util.ArticleDocumentMapper;
 import org.joksin.demomongo.model.Article;
-import org.joksin.demomongo.util.DocumentMongoTemplate;
+import org.joksin.demomongo.util.EnhancedMongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.LookupOperation;
 import org.springframework.stereotype.Component;
@@ -13,10 +13,10 @@ import java.util.List;
 @Component
 public class ArticleDao {
 
-    private final DocumentMongoTemplate mongoTemplate;
+    private final EnhancedMongoTemplate mongoTemplate;
     private final ArticleDocumentMapper articleBsonObjectMapper;
 
-    public ArticleDao(DocumentMongoTemplate mongoTemplate, ArticleDocumentMapper articleBsonObjectMapper) {
+    public ArticleDao(EnhancedMongoTemplate mongoTemplate, ArticleDocumentMapper articleBsonObjectMapper) {
         this.mongoTemplate = mongoTemplate;
         this.articleBsonObjectMapper = articleBsonObjectMapper;
     }

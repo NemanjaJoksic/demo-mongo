@@ -1,8 +1,11 @@
 package org.joksin.demomongo.util;
 
 import org.bson.Document;
+import org.springframework.context.annotation.Primary;
+import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.convert.MongoConverter;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
@@ -10,17 +13,16 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Primary
 @Component
-public class DocumentMongoTemplate {
+public class EnhancedMongoTemplate extends MongoTemplate {
 
-    private final MongoTemplate mongoTemplate;
-
-    public DocumentMongoTemplate(MongoTemplate mongoTemplate) {
-        this.mongoTemplate = mongoTemplate;
+    public EnhancedMongoTemplate(MongoDatabaseFactory mongoDatabaseFactory, MongoConverter mongoConverter) {
+        super(mongoDatabaseFactory, mongoConverter);
     }
 
     public <T> void insert(T object, String collectionName, DocumentWriter<T> documentWriter) {
-        mongoTemplate.insert(documentWriter.mapToDocument(object), collectionName);
+        super.insert(documentWriter.mapToDocument(object), collectionName);
     }
 
     public <T> void insert(Collection<T> objects, String collectionName, DocumentWriter<T> documentWriter) {
@@ -28,11 +30,11 @@ public class DocumentMongoTemplate {
                 = objects.stream()
                 .map(documentWriter::mapToDocument)
                 .collect(Collectors.toList());
-        mongoTemplate.insert(basicDbObjects, collectionName);
+        super.insert(basicDbObjects, collectionName);
     }
 
     public List<Document> findAll(String collectionName) {
-        return mongoTemplate.findAll(Document.class, collectionName);
+        return super.findAll(Document.class, collectionName);
     }
     public <T> List<T> findAll(String collectionName, DocumentReader<T> documentReader) {
         return findAll(collectionName)
@@ -42,7 +44,7 @@ public class DocumentMongoTemplate {
     }
 
     public Document findOne(Query query, String collectionName) {
-        return mongoTemplate.findOne(query, Document.class, collectionName);
+        return super.findOne(query, Document.class, collectionName);
     }
 
     public <T> T findOne(Query query, String collectionName, DocumentReader<T> documentReader) {
@@ -51,7 +53,7 @@ public class DocumentMongoTemplate {
     }
 
     public <T> List<T> aggregate(Aggregation aggregation, String collectionName, DocumentReader<T> documentReader) {
-        List<Document> documents = mongoTemplate.aggregate(aggregation, collectionName, Document.class).getMappedResults();
+        List<Document> documents = super.aggregate(aggregation, collectionName, Document.class).getMappedResults();
         return documents.stream()
                 .map(documentReader::mapToObject)
                 .collect(Collectors.toList());
